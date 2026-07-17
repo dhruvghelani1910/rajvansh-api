@@ -1,6 +1,7 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 import swaggerJsDoc from 'swagger-jsdoc';
@@ -33,13 +34,11 @@ import policyRoutes from './routes/policy/routes.js';
 import reviewsRoutes from './routes/reviews/routes.js';
 
 
-// Load environment variables
-dotenv.config();
+
 
 const app = express();
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+// Pure REST API — no view engine needed
 app.use(logger('dev'));
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
@@ -58,8 +57,8 @@ const options = {
     },
     servers: [
       {
-        url: `${process.env.APP_URI || 'http://localhost'}:${process.env.PORT || 5000}`,
-        description: 'Safa API Documentation',
+        url: process.env.APP_URI || `http://localhost:${process.env.PORT || 5000}`,
+        description: "Rajvansh API Documentation",
       },
     ],
     components: {
@@ -86,7 +85,30 @@ app.use(
     customCssUrl: '/custom.css',
   }),
 );
+// Home Route
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    application: "Rajvansh API",
+    message: "API is running successfully 🚀",
+    version: "1.0.0",
+    environment: process.env.NODE_ENV || "development",
+    timestamp: new Date().toISOString(),
+    documentation: "/api-docs",
+    health: "/health"
+  });
+});
 
+// Health Route
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: "OK",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+    node: process.version
+  });
+});
 // Map Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -106,20 +128,16 @@ app.use('/api/policy', policyRoutes);
 app.use('/api/reviews', reviewsRoutes);
 
 app.use((req, res, next) => {
-    if (req.originalUrl.startsWith('/api')) {
-        return responseManager.badrequest({ message: 'No route found' }, res);
-    }
-    next(createError(404));
+  if (req.originalUrl.startsWith('/api')) {
+    return responseManager.badrequest({ message: 'No route found' }, res);
+  }
+  next(createError(404));
 });
 
 app.use((error, req, res, next) => {
-    if (req.originalUrl.startsWith('/api')) {
-        return responseManager.badrequest({ message: process.env.NODE_ENV === 'development' ? error.message : 'Internal Server Error' }, res);
-    }
-    res.locals.message = error.message;
-    res.locals.error = req.app.get('env') === 'development' ? error : {};
-    res.status(error.status || 500);
-    res.render('error');
+  const status = error.status || 500;
+  const message = req.app.get('env') === 'development' ? error.message : 'Internal Server Error';
+  res.status(status).json({ success: false, status, message });
 });
 
 const PORT = process.env.PORT || 5000;
