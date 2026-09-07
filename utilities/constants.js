@@ -15,7 +15,8 @@ const constants = {
         customer: 'customer',
         reviews: 'reviews',
         appointment: 'appointment',
-        dailySlot: 'dailySlot'
+        dailySlot: 'dailySlot',
+        story: 'story'
     }
 };
 

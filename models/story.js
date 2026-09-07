@@ -2,37 +2,37 @@ import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
 const schema = new mongoose.Schema({
-  phone: {
-    type: String,
-    default: ""
-  },
-  email: {
-    type: String,
-    default: ""
-  },
-  address: {
-    type: String,
-    default: ""
-  },
-  mapLink: {
-    type: String,
-    default: ""
-  },
-  openTime: {
+  label: {
     type: String,
     required: true,
-    default: "10:00 AM"
+    trim: true
   },
-  closeTime: {
+  badge: {
+    type: String,
+    default: "",
+    trim: true
+  },
+  heading: {
     type: String,
     required: true,
-    default: "08:30 PM"
+    trim: true
   },
-  aboutUs: {
+  paragraphs: {
+    type: [String],
+    default: []
+  },
+  bullets: {
+    type: [String],
+    default: []
+  },
+  image: {
     type: String,
     default: ""
   },
-
+  order: {
+    type: Number,
+    default: 0
+  },
 
   // Standard fields
   status: {
