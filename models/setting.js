@@ -32,6 +32,11 @@ const schema = new mongoose.Schema({
     type: String,
     default: ""
   },
+
+  brandStoryTabs: {
+    type: Array,
+    default: []
+  },
   
   // Standard fields
   status: {

@@ -32,10 +32,7 @@ import instagramRoutes from './routes/instagram/routes.js';
 import reportsRoutes from './routes/reports/routes.js';
 import policyRoutes from './routes/policy/routes.js';
 import reviewsRoutes from './routes/reviews/routes.js';
-
-
-
-
+import appointmentRoutes from './routes/appointment/routes.js';
 const app = express();
 
 // Pure REST API — no view engine needed
@@ -126,6 +123,7 @@ app.use('/api/instagram', instagramRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/policy', policyRoutes);
 app.use('/api/reviews', reviewsRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
 app.use((req, res, next) => {
   if (req.originalUrl.startsWith('/api')) {

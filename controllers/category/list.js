@@ -5,7 +5,7 @@ import modelSchema from '../../models/category.js';
 import userModel from '../../models/user.js';
 
 export const list = async (req, res) => {
-    const { page = 1, limit = 10, search = '', sortfield = 'createdAt', sortoption = -1, status, isDeleted = false } = req.body;
+    const { page = 1, limit = 10, search = '', sortfield = 'sequence', sortoption = 1, status, isDeleted = false } = req.body;
     
     let query = { isDeleted };
     if (typeof status === 'boolean') query.status = status;

@@ -13,7 +13,9 @@ const constants = {
         setting: 'setting',
         instagram: 'instagram',
         customer: 'customer',
-        reviews: 'reviews'
+        reviews: 'reviews',
+        appointment: 'appointment',
+        dailySlot: 'dailySlot'
     }
 };
 

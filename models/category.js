@@ -8,8 +8,12 @@ const schema = new mongoose.Schema({
     trim: true
   },
   type: {
-    type: String,
-    default: 'product'
+    type: [String],
+    default: ['product']
+  },
+  sequence: {
+    type: Number,
+    default: 0
   },
   description: {
     type: String,

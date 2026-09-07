@@ -54,6 +54,11 @@ const schema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  purpose: {
+    type: String,
+    enum: ['Rent', 'Sell', 'Both'],
+    default: 'Sell'
+  },
 
   // Standard fields
   status: {

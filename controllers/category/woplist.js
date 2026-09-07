@@ -18,7 +18,7 @@ export const woplist = async (req, res) => {
         }).populate([
             { path: 'createdBy', model: User, select: '_id username profilepic' },
             { path: 'updatedBy', model: User, select: '_id username profilepic' }
-        ]).sort({ createdAt: -1 }).lean().then((data) => {
+        ]).sort({ sequence: 1, createdAt: -1 }).lean().then((data) => {
             return responseManager.onSuccess('List fetched successfully', data, res);
         }).catch((error) => {
             return responseManager.onError(error, res);

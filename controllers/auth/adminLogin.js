@@ -15,19 +15,25 @@ const adminLogin = async (req, res) => {
       return responseManager.sendError(res, 'Please provide username and password', null, 400);
     }
 
+    const cleanInput = username.trim().toLowerCase();
     const primary = mongoConnection.useDb(constants.DEFAULT_DB);
     const UserModel = primary.model(constants.MODELS.users, User);
 
-    // Find admin user
-    const user = await UserModel.findOne({ username: username.toLowerCase(), role: 'admin' });
+    // Find admin user by username or email
+    const user = await UserModel.findOne({
+      $or: [{ username: cleanInput }, { email: cleanInput }],
+      role: 'admin'
+    });
 
     if (!user) {
-      return responseManager.sendError(res, 'Invalid admin username or password', null, 401);
+      console.log(`[AdminLogin Debug] User not found for username/email: "${cleanInput}"`);
+      return responseManager.sendError(res, `Admin user '${username}' not found`, null, 401);
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return responseManager.sendError(res, 'Invalid admin username or password', null, 401);
+      console.log(`[AdminLogin Debug] Password mismatch for user: "${user.username}"`);
+      return responseManager.sendError(res, 'Incorrect password for admin user', null, 401);
     }
 
     // Generate JWT token (use userid to align with req.token?.userid)
@@ -46,6 +52,7 @@ const adminLogin = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('[AdminLogin Debug] Server error:', error);
     return responseManager.sendError(res, 'Server error during admin login', error, 500);
   }
 };
